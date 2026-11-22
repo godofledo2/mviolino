@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matheus | Violinista</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vinho: #4a1c2a;
+      --dourado: #c5a059;
+      --creme: #fdf8f2;
+      --marrom: #2d1a10;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, #4a1c2a 0%, #2d1a10 100%);
+      color: var(--creme);
+      overflow-x: hidden;
+    }
+    h1, h2, .serif {
+      font-family: 'Playfair Display', serif;
+    }
+    .speech-bubble {
+      position: relative;
+      background: rgba(255, 255, 255, 0.95);
+      color: #2d1a10;
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 16px 16px 0;
+      border-style: solid;
+      border-color: rgba(255,255,255,0.95) transparent transparent transparent;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--dourado);
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .avatar-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .note {
+      position: absolute;
+      font-size: 1.5rem;
+      color: rgba(197, 160, 89, 0.4);
+      animation: floatNote 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes floatNote {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+    .social-btn {
+      transition: all 0.3s ease;
+    }
+    .social-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(197, 160, 89, 0.3);
+    }
+    .music-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 50;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: rgba(197, 160, 89, 0.9);
+      color: #2d1a10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .music-btn:hover {
+      transform: scale(1.1);
+      background: #c5a059;
+    }
+    .music-btn.muted {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fdf8f2;
+    }
+    .sound-notice {
+      position: fixed;
+      bottom: 5rem;
+      right: 1.5rem;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 9999px;
+      background: rgba(197, 160, 89, 0.95);
+      color: #2d1a10;
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      max-width: calc(100vw - 3rem);
+    }
+    .sound-notice:hover {
+      transform: scale(1.05);
+      background: #c5a059;
+    }
+    .sound-notice.show {
+      display: flex;
+      animation: pulseNotice 2s infinite;
+    }
+    .sound-notice-icon {
+      font-size: 1.1rem;
+    }
+    .sound-notice-text {
+      white-space: nowrap;
+    }
+    @keyframes pulseNotice {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
+      50% { box-shadow: 0 4px 24px rgba(197, 160, 89, 0.6); }
+    }
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      z-index: 50;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: #25D366;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: pulseWhats 2s infinite;
+    }
+    .whatsapp-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
+    }
+    @keyframes pulseWhats {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .location-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      transition: all 0.3s ease;
+    }
+    .location-card:hover {
+      background: rgba(197, 160, 89, 0.1);
+      border-color: rgba(197, 160, 89, 0.5);
+      transform: translateY(-4px);
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      color: #c5a059;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .region-map {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .map-pin {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #c5a059;
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(197, 160, 89, 0.2);
+      animation: pulsePin 2s infinite;
+    }
+    @keyframes pulsePin {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(197, 160, 89, 0); }
+    }
+    .section-divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c5a059, transparent);
+      margin: 2rem auto;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center relative px-4 py-8">
+
+  <!-- Música de fundo -->
+  <audio id="bgMusic" loop>
+    <source src="musica-de-fundo.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <!-- Aviso para ativar o som -->
+  <div id="soundNotice" class="sound-notice" onclick="activateSound()">
+    <span class="sound-notice-icon">🎵</span>
+    <span class="sound-notice-text">Toque para ativar o som</span>
+  </div>
+
+  <!-- Botão flutuante do WhatsApp -->
+  <a href="https://wa.me/5516999999999?text=Oi%2C%20Matheus!%20Vi%20seu%20site%20e%20queria%20um%20or%C3%A7amento%20para%20violino%20em%20um%20evento." target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Enviar mensagem no WhatsApp">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+
+  <!-- Botão de controle do som -->
+  <button id="musicToggle" class="music-btn" onclick="toggleMusic()" aria-label="Controlar música">
+    <svg id="iconOn" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+    <svg id="iconOff" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+  </button>
+
+  <!-- Notas musicais flutuantes -->
+  <div id="notes-container"></div>
+
+  <main class="w-full max-w-4xl z-10 flex flex-col items-center gap-8">
+    
+    <!-- Avatar -->
+    <div class="avatar-float relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#c5a059] shadow-2xl bg-[#2d1a10]">
+      <img src="matheus.jpg" alt="Matheus violinista" class="w-full h-full object-cover object-top" />
+    </div>
+
+    <!-- Balão de fala -->
+    <div class="speech-bubble w-full max-w-xl text-center">
+      <h1 class="text-2xl md:text-3xl font-bold mb-2 serif text-[#4a1c2a]">Oi, eu sou o Matheus!</h1>
+      <p class="text-base md:text-lg leading-relaxed min-h-[5rem]">
+        <span id="typed-text"></span><span class="cursor"></span>
+      </p>
+    </div>
+
+    <!-- Redes sociais -->
+    <div class="flex flex-wrap justify-center gap-4 mt-2">
+      <a href="https://instagram.com/violino_matheus" target="_blank" rel="noopener" class="social-btn flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full font-semibold">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <a href="https://tiktok.com/@matheus.mviolino" target="_blank" rel="noopener" class="social-btn flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-semibold border border-white/20">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        TikTok
+      </a>
+      <a href="mailto:universitario.matheus@gmail.com" class="social-btn flex items-center gap-2 bg-[#c5a059] text-[#2d1a10] px-6 py-3 rounded-full font-semibold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Contato
+      </a>
+    </div>
+
+    <!-- Seção: Onde já toquei -->
+    <section id="onde-toquei" class="w-full mt-8 fade-in">
+      <div class="section-divider"></div>
+      <h2 class="text-3xl md:text-4xl font-bold text-center serif text-[#c5a059] mb-2">Onde já toquei</h2>
+      <p class="text-center text-white/70 mb-8">Levo meu violino por toda a região. Sua cidade pode ser a próxima!</p>
+      
+      <!-- Estatísticas -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+        <div class="text-center p-4">
+          <div class="stat-number" data-target="50">0</div>
+          <p class="text-white/80 text-sm mt-1">eventos realizados</p>
+        </div>
+        <div class="text-center p-4">
+          <div class="stat-number" data-target="8">0</div>
+          <p class="text-white/80 text-sm mt-1">cidades atendidas</p>
+        </div>
+        <div class="text-center p-4 col-span-2 md:col-span-1">
+          <div class="stat-number" data-target="6">0</div>
+          <p class="text-white/80 text-sm mt-1">anos de experiência</p>
+        </div>
+      </div>
+
+      <!-- Mapa ilustrativo com pins -->
+      <div class="region-map h-64 mb-8 rounded-2xl overflow-hidden border border-[#c5a059]/30 bg-gradient-to-br from-[#4a1c2a]/50 to-[#2d1a10]/80 relative">
+        <svg class="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 600 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 180 Q120 120 200 150 T350 130 T500 80 T580 100" stroke="#c5a059" stroke-width="2" stroke-dasharray="8 6"/>
+          <path d="M80 200 Q150 160 250 180 T420 140 T560 160" stroke="#c5a059" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"/>
+          <circle cx="180" cy="150" r="4" fill="#c5a059" opacity="0.5"/>
+          <circle cx="320" cy="135" r="4" fill="#c5a059" opacity="0.5"/>
+          <circle cx="460" cy="100" r="4" fill="#c5a059" opacity="0.5"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <p class="text-[#c5a059]/50 text-sm italic">Região de Bebedouro e cidades vizinhas</p>
+        </div>
+        <!-- Pins animados nas posições do mapa -->
+        <div class="map-pin" style="top: 42%; left: 30%;" title="Bebedouro"></div>
+        <div class="map-pin" style="top: 48%; left: 53%;" title="Viradouro"></div>
+        <div class="map-pin" style="top: 38%; left: 77%;" title="Morro Agudo"></div>
+      </div>
+
+      <!-- Cards das cidades -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="location-card rounded-2xl p-5 text-center">
+          <div class="text-3xl mb-3">🎻</div>
+          <h3 class="font-bold text-[#c5a059] text-lg serif">Bebedouro</h3>
+          <p class="text-white/70 text-sm mt-1">Casamentos, aniversários e eventos corporativos</p>
+        </div>
+        <div class="location-card rounded-2xl p-5 text-center">
+          <div class="text-3xl mb-3">🎻</div>
+          <h3 class="font-bold text-[#c5a059] text-lg serif">Viradouro</h3>
+          <p class="text-white/70 text-sm mt-1">Cerimônias e confraternizações</p>
+        </div>
+        <div class="location-card rounded-2xl p-5 text-center">
+          <div class="text-3xl mb-3">🎻</div>
+          <h3 class="font-bold text-[#c5a059] text-lg serif">Morro Agudo</h3>
+          <p class="text-white/70 text-sm mt-1">Eventos particulares e shows</p>
+        </div>
+        <div class="location-card rounded-2xl p-5 text-center">
+          <div class="text-3xl mb-3">🎻</div>
+          <h3 class="font-bold text-[#c5a059] text-lg serif">Pitangueiras</h3>
+          <p class="text-white/70 text-sm mt-1">Casamentos e celebrações</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-12 text-[#c5a059]/70 text-sm z-10">
+    © 2026 Matheus Violinista
+  </footer>
+
+  <script>
+    // Texto fixo do site
+    const currentText = "Sou violinista e apaixonado por música. Toco nos mais diversos tipos de eventos, com um carinho especial por casamentos, que são, pra mim, um dos momentos mais emocionantes de se acompanhar com música.\n\nAqui você encontra meus covers, registros das minhas apresentações e um pouco da minha jornada com o violino.\n\nVamos nos conectar?";
+    
+    // Efeito de digitação
+    const typedSpan = document.getElementById('typed-text');
+    let charIndex = 0;
+    
+    function typeWriter() {
+      if (charIndex < currentText.length) {
+        typedSpan.textContent += currentText.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 35);
+      }
+    }
+    
+    // Criar notas musicais flutuantes
+    function createNote() {
+      const notes = ['♪', '♫', '♩', '♬', '♭', '♮'];
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.textContent = notes[Math.floor(Math.random() * notes.length)];
+      note.style.left = Math.random() * 100 + 'vw';
+      note.style.animationDuration = (4 + Math.random() * 6) + 's';
+      note.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+      document.getElementById('notes-container').appendChild(note);
+      
+      setTimeout(() => note.remove(), 10000);
+    }
+    
+    setInterval(createNote, 1200);
+    
+    // Controle da música de fundo
+    const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const iconOn = document.getElementById('iconOn');
+    const iconOff = document.getElementById('iconOff');
+    let musicPlaying = false;
+
+    function updateMusicIcon() {
+      if (musicPlaying) {
+        iconOn.classList.remove('hidden');
+        iconOff.classList.add('hidden');
+        musicToggle.classList.remove('muted');
+      } else {
+        iconOn.classList.add('hidden');
+        iconOff.classList.remove('hidden');
+        musicToggle.classList.add('muted');
+      }
+    }
+
+    function toggleMusic() {
+      if (bgMusic.paused) {
+        bgMusic.play().then(() => {
+          musicPlaying = true;
+          updateMusicIcon();
+        }).catch(() => {
+          musicPlaying = false;
+          updateMusicIcon();
+        });
+      } else {
+        bgMusic.pause();
+        musicPlaying = false;
+        updateMusicIcon();
+      }
+    }
+
+    const soundNotice = document.getElementById('soundNotice');
+
+    function showSoundNotice() {
+      if (soundNotice) soundNotice.classList.add('show');
+    }
+
+    function hideSoundNotice() {
+      if (soundNotice) soundNotice.classList.remove('show');
+    }
+
+    function activateSound() {
+      bgMusic.play().then(() => {
+        musicPlaying = true;
+        updateMusicIcon();
+        hideSoundNotice();
+      }).catch(() => {
+        musicPlaying = false;
+        updateMusicIcon();
+      });
+    }
+
+    // Tenta iniciar a música automaticamente
+    window.addEventListener('load', () => {
+      bgMusic.volume = 0.4;
+      bgMusic.play().then(() => {
+        musicPlaying = true;
+        updateMusicIcon();
+        hideSoundNotice();
+      }).catch(() => {
+        musicPlaying = false;
+        updateMusicIcon();
+        showSoundNotice();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (soundNotice && soundNotice.classList.contains('show') && e.target !== soundNotice && !soundNotice.contains(e.target) && e.target !== musicToggle && !musicToggle.contains(e.target)) {
+        activateSound();
+      }
+    });
+
+    // Animação de fade-in ao rolar
+    const observerOptions = {
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          
+          // Anima os contadores se for a seção de onde toquei
+          if (entry.target.id === 'onde-toquei') {
+            animateCounters();
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Animação dos contadores
+    let countersAnimated = false;
+    function animateCounters() {
+      if (countersAnimated) return;
+      countersAnimated = true;
+      
+      const counters = document.querySelectorAll('.stat-number');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          counter.textContent = Math.floor(current);
+        }, 16);
+      });
+    }
+
+    // Iniciar
+    typeWriter();
+  </script>
+</body>
+</html>
