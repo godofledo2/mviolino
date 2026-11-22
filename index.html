@@ -59,14 +59,6 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
-    .bow-arm {
-      transform-origin: 130px 140px;
-      animation: bow 2.5s ease-in-out infinite;
-    }
-    @keyframes bow {
-      0%, 100% { transform: rotate(-6deg); }
-      50% { transform: rotate(6deg); }
-    }
     .note {
       position: absolute;
       font-size: 1.5rem;
@@ -181,7 +173,7 @@
     
     <!-- Avatar -->
     <div class="avatar-float relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#c5a059] shadow-2xl bg-[#2d1a10]">
-      <img src="https://d31zra5bs5df64.cloudfront.net/prod/3LfaOWmQanx9aM8U9aj3DeY5eu6/chat/3MSs4lxV3JG8mmJ6NmgATyPVC9J/3MSsfq7uDpFxRvUatkia8Bn9wTP.jpeg?Expires=1795364257&Key-Pair-Id=K2FT0I8VPJSP5H&Signature=ZUmGPEawP1qjLI1RhkfJ2Ev0CssDRUBIHuceaekVyLIERkRI6pyvPrxCSoy6d7SwaMzeY3IWCmyFCe45quuAkaZ-SoNsFMcmlik82RjvWS7XgltRfGrPjqHR6PAo461DLjYTY-sxQ31m2d0o--alZmFm~UPZWP6-D9PkYGpb6Q6UAbHDFjfyFdncC5o9EeEN8RhDr4Klwrz7KU3ySZCykl1Lif1qlvgX9VtZxiQD-m8eOBV5YLRB5XI6~WjF9l18AHWriOcbbnqlpzg1NVOR7wwMj6g0gQlPFSh4Vt1lYNuuyRN6LsqZHo~hwK8U5nFeaYQSyGPW8kApF8nARua~qQ__" alt="Matheus violinista" class="w-full h-full object-cover object-top" />
+      <img src="matheus.jpg" alt="Matheus violinista" class="w-full h-full object-cover object-top" />
     </div>
 
     <!-- Balão de fala -->
@@ -245,16 +237,6 @@
     }
     
     setInterval(createNote, 1200);
-    
-    // Piscar olhos
-    function blinkEyes() {
-      const eyes = document.querySelectorAll('.eyes ellipse');
-      eyes.forEach(eye => eye.setAttribute('ry', '1'));
-      setTimeout(() => {
-        eyes.forEach(eye => eye.setAttribute('ry', '6'));
-      }, 150);
-      setTimeout(blinkEyes, 3000 + Math.random() * 4000);
-    }
     
     // Controle da música de fundo
     const bgMusic = document.getElementById('bgMusic');
@@ -337,7 +319,6 @@
 
     // Iniciar
     typeWriter();
-    blinkEyes();
   </script>
 </body>
 </html>
